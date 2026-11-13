@@ -1,25 +1,540 @@
 <!DOCTYPE html>
-<html lang="zh"><head>
+<html lang="zh">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="60">
-<title>爆款雷达 · 还在加载</title>
+<title>Ming Yi Tang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-       background:#0a0d13;color:#e8e8ea;text-align:center;padding:24px;
-       font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
-  .spin{width:34px;height:34px;margin:0 auto 26px;border:3px solid #2a2f3a;
-        border-top-color:#ff785a;border-radius:50%;animation:s 1s linear infinite}
-  @keyframes s{to{transform:rotate(360deg)}}
-  h1{font-size:23px;margin:0 0 14px;font-weight:600}
-  p{margin:8px 0;color:#9a9aa2;font-size:15px;line-height:1.75}
-  .hint{margin-top:30px;font-size:13.5px;color:#6e6e78}
-  @media(prefers-reduced-motion:reduce){.spin{animation:none}}
-</style></head><body><div>
-  <div class="spin"></div>
-  <h1>你的页面还在加载中,请稍等</h1>
-  <p>第一次大约需要 20-60 分钟。</p>
-  <p>这一页会自己刷新,你可以先去忙别的。</p>
-  <p class="hint">等很久都没变?回到安装 SOP 第 7 步,<br>到仓库的 Actions 看 Sync Content 有没有跑完。</p>
-</div></body></html>
+  :root {
+    --bg: #0a0d13;
+    --card: #11151d;
+    --card-hi: #151a24;
+    --border: #1d2430;
+    --border-hi: #2c3546;
+    --text: #e8ecf3;
+    --muted: #8a94a6;
+    --faint: #5b6577;
+    --accent: #5ea1ff;
+    --green: #3fd68f;
+    --orange: #f0a33f;
+    --pink: #ff6b9d;
+    --red: #ff5c5c;
+    --fire1: #ff8a3d;
+    --fire2: #ff4d6d;
+    --font: 'Inter', -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --disp: 'Space Grotesk', 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scrollbar-color: #232c3b var(--bg); }
+  body { background: var(--bg); color: var(--text); font-family: var(--font);
+    -webkit-font-smoothing: antialiased; }
+  ::selection { background: rgba(94,161,255,.3); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #232c3b; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2c3546; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  .ic { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round; fill: none; flex: none; }
+
+  header { position: sticky; top: 0; z-index: 50; background: rgba(10,13,19,.86);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border); padding: 13px 20px 12px; }
+  .hrow { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; max-width: 1440px; margin: 0 auto; }
+  .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+  .mark { width: 31px; height: 31px; border-radius: 9px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--fire1), var(--fire2));
+    box-shadow: 0 4px 16px rgba(255,92,80,.35); }
+  .mark .ic { width: 17px; height: 17px; color: #fff; }
+  h1 { font-family: var(--disp); font-size: 16.5px; font-weight: 700; letter-spacing: .2px; white-space: nowrap; line-height: 1.15; }
+  h1 small { display: block; color: var(--faint); font-family: var(--font); font-weight: 400;
+    font-size: 10.5px; letter-spacing: 0; }
+
+  .search { position: relative; }
+  .search > .ic { position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--faint); width: 13.5px; pointer-events: none; }
+  input#fSearch { background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 12px 8px 32px; font-size: 13px; font-family: var(--font);
+    width: 200px; transition: border-color .18s, background .18s; }
+  input#fSearch:hover { border-color: var(--border-hi); }
+  input#fSearch:focus { border-color: var(--accent); outline: none; }
+  input#fSearch::placeholder { color: var(--faint); }
+
+  select, .btn { background: var(--card); color: var(--text); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 11px; font-size: 13px; font-family: var(--font);
+    cursor: pointer; transition: border-color .18s, background .18s, color .18s;
+    display: inline-flex; align-items: center; gap: 6px; }
+  select:hover, .btn:hover { border-color: var(--border-hi); background: var(--card-hi); }
+  .btn:active { transform: scale(.97); }
+  .btn.on { border-color: var(--accent); color: var(--accent); background: rgba(94,161,255,.08); }
+
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; max-width: 1440px; margin: 12px auto 0; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 6.5px 14px;
+    font-size: 13px; color: var(--muted); cursor: pointer; user-select: none;
+    transition: border-color .18s, background .18s, color .18s, transform .18s; }
+  .tab:hover { border-color: var(--border-hi); color: var(--text); }
+  .tab .cnt { font-family: var(--disp); font-weight: 600; font-size: 11px;
+    background: rgba(255,255,255,.06); padding: 1.5px 7.5px; border-radius: 99px;
+    font-variant-numeric: tabular-nums; }
+  .tab.on { color: var(--text);
+    background: linear-gradient(135deg, rgba(255,138,61,.15), rgba(255,77,109,.15));
+    border-color: rgba(255,120,90,.45); }
+  .tab.on .cnt { background: rgba(255,120,90,.25); }
+  body.dragging .tab.droppable { border-style: dashed; border-color: var(--accent); }
+  .tab.over { background: rgba(94,161,255,.22); color: var(--text); transform: scale(1.07); }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; max-width: 1440px; margin: 9px auto 0; align-items: center; }
+  .chips .lbl { font-size: 12px; color: var(--faint); margin-right: 2px; }
+  .chip2 { display: inline-flex; align-items: center; gap: 5.5px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 4.5px 12px;
+    font-size: 12px; color: var(--muted); cursor: pointer; user-select: none;
+    transition: border-color .18s, color .18s, background .18s;
+    font-variant-numeric: tabular-nums; }
+  .chip2 .ic { width: 12.5px; height: 12.5px; }
+  .chip2:hover { border-color: var(--border-hi); color: var(--text); }
+  .chip2.on { border-color: rgba(240,163,63,.6); color: var(--orange); background: rgba(240,163,63,.08); }
+
+  main { max-width: 1440px; margin: 22px auto; padding: 0 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(305px, 1fr)); gap: 18px; }
+
+  .card { position: relative; background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .22s cubic-bezier(.2,.7,.3,1), border-color .22s, box-shadow .22s;
+    animation: fadeUp .45s cubic-bezier(.2,.7,.3,1) both; }
+  .card:hover { transform: translateY(-3px); border-color: var(--border-hi);
+    box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+  .card.outlier::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--fire1), var(--fire2)); z-index: 2; }
+  .card[draggable] { cursor: grab; }
+  .card.lifting { opacity: .45; }
+  .card.saved { border-color: var(--green); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .embed { position: relative; width: 100%; aspect-ratio: 4/5; background: #080b10; }
+  .embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .embed .ph { position: absolute; inset: 0; display: grid; place-items: center;
+    background: linear-gradient(110deg, #0b0e15 8%, #121826 18%, #0b0e15 33%);
+    background-size: 200% 100%; animation: shimmer 1.5s linear infinite; }
+  .embed .ph .ic { width: 30px; height: 30px; color: #2a3342; stroke-width: 1.6; }
+  @keyframes shimmer { to { background-position-x: -200%; } }
+
+  .meta { padding: 13px 15px 14px; display: flex; flex-direction: column; gap: 9px; }
+  .row1 { display: flex; align-items: center; gap: 7px; font-size: 13px; flex-wrap: wrap; }
+  .handle { color: #3a4456; cursor: grab; display: inline-flex; }
+  .handle .ic { width: 13px; height: 13px; }
+  .who { font-weight: 600; color: var(--accent); text-decoration: none; }
+  .who:hover { text-decoration: underline; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 500;
+    padding: 2.5px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  .badge .ic { width: 10.5px; height: 10.5px; }
+  .badge.bnew { color: var(--pink); border-color: rgba(255,107,157,.45); background: rgba(255,107,157,.07); }
+  .badge.bhorse { color: var(--orange); border-color: rgba(240,163,63,.45); background: rgba(240,163,63,.07); }
+  .badge.bbait { color: var(--accent); border-color: rgba(94,161,255,.4); background: rgba(94,161,255,.07); }
+  .date { margin-left: auto; color: var(--faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+  .nums { display: flex; gap: 6px; flex-wrap: wrap; }
+  .num { display: inline-flex; align-items: center; gap: 5px; background: #0c0f16;
+    border: 1px solid var(--border); border-radius: 9px; padding: 5px 9px;
+    font-size: 11px; color: var(--muted); }
+  .num .ic { width: 11.5px; height: 11.5px; }
+  .num b { font-family: var(--disp); color: var(--text); font-size: 12.5px; font-weight: 600;
+    font-variant-numeric: tabular-nums; }
+  .num.hot { border-color: rgba(255,122,77,.35); }
+  .num.hot .ic, .num.hot b { color: #ff7a4d; }
+  .num.x { border-color: rgba(240,163,63,.35); }
+  .num.x .ic, .num.x b { color: var(--orange); }
+  .num.er .ic, .num.er b { color: var(--green); }
+
+  .cap { color: var(--muted); font-size: 12.5px; line-height: 1.55; display: -webkit-box;
+    -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+  .cap.open { -webkit-line-clamp: unset; }
+  .cap b { color: var(--text); font-weight: 600; }
+  .ai { border-left: 2px solid var(--orange); background: rgba(240,163,63,.06);
+    padding: 8px 11px; border-radius: 0 10px 10px 0; font-size: 12px; line-height: 1.65;
+    color: var(--muted); }
+  .ai b { color: var(--orange); font-weight: 600; }
+  .mine { border-left: 2px solid var(--green); background: rgba(63,214,143,.06);
+    padding: 8px 11px; border-radius: 0 10px 10px 0; font-size: 12px; line-height: 1.65;
+    color: var(--muted); cursor: pointer; display: -webkit-box; -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical; overflow: hidden; white-space: pre-wrap; }
+  .mine.open { -webkit-line-clamp: unset; }
+  .mine b { color: var(--green); font-weight: 600; }
+
+  .srow { display: flex; align-items: center; gap: 7px; }
+  .srow label { font-size: 12px; color: var(--faint); }
+  .status { flex: 1; padding: 6px 9px; font-size: 12.5px; }
+  .status.s未处理 { color: var(--muted); }
+  .status.s拍摄中 { color: var(--orange); border-color: rgba(240,163,63,.5); }
+  .status.s已处理 { color: var(--green); border-color: rgba(63,214,143,.5); }
+  .status.s跳过 { color: var(--red); border-color: rgba(255,92,92,.5); }
+  .abtn { display: inline-flex; align-items: center; gap: 5px; background: #0c0f16;
+    color: var(--muted); border: 1px solid var(--border); border-radius: 9px;
+    padding: 6px 10px; font-size: 11.5px; font-family: var(--font); cursor: pointer;
+    text-decoration: none; transition: color .18s, border-color .18s, transform .1s; }
+  .abtn .ic { width: 12px; height: 12px; }
+  .abtn:hover { color: var(--accent); border-color: rgba(94,161,255,.5); }
+  .abtn:active { transform: scale(.95); }
+
+  .more { text-align: center; margin: 28px 0 44px; }
+  .more button { background: var(--card); color: var(--accent); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 30px; font-size: 14px; font-family: var(--font);
+    cursor: pointer; transition: border-color .18s, background .18s; }
+  .more button:hover { border-color: var(--border-hi); background: var(--card-hi); }
+
+  .empty { color: var(--faint); text-align: center; padding: 70px 0; display: flex;
+    flex-direction: column; align-items: center; gap: 12px; font-size: 14px; }
+  .empty .ic { width: 34px; height: 34px; stroke-width: 1.5; color: #2c3546; }
+
+  footer { color: var(--faint); font-size: 11px; text-align: center; padding: 22px; }
+
+  #toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%) translateY(8px);
+    background: var(--card-hi); border: 1px solid var(--border-hi); border-radius: 11px;
+    padding: 11px 20px; font-size: 13px; display: none; z-index: 99; opacity: 0;
+    box-shadow: 0 12px 32px rgba(0,0,0,.5); transition: opacity .2s, transform .2s; }
+  #toast.show { display: block; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M22 7l-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.5l7.1-.6z"/></symbol>
+  <symbol id="i-magnet" viewBox="0 0 24 24"><path d="m6 15-4-4 6.75-6.77a7.79 7.79 0 0 1 11 11L13 22l-4-4 6.39-6.36a2.14 2.14 0 0 0-3-3L6 15"/><path d="m5 8 4 4"/><path d="m12 15 4 4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6"/><path d="M9 16h6"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m10 8 6 4-6 4Z"/><rect x="2" y="4" width="20" height="16" rx="3"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+  <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></symbol>
+  <symbol id="i-pct" viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></symbol>
+</svg>
+<header>
+  <div class="hrow">
+    <div class="brand">
+      <div class="mark"><svg class="ic"><use href="#i-flame"/></svg></div>
+      <h1>Ming Yi Tang<small id="updated"></small></h1>
+    </div>
+    <div class="search"><svg class="ic"><use href="#i-search"/></svg>
+      <input id="fSearch" placeholder="搜文案 / hashtag / 账号"></div>
+    <select id="fTracker"><option value="">全部 Tracker</option></select>
+    <select id="fComp"><option value="">全部 Competitor</option></select>
+    <select id="fSort">
+      <option value="x">按 爆款倍数 (vs 自家平均)</option>
+      <option value="score">按 Viral Score</option>
+      <option value="er">按 Engagement Rate</option>
+      <option value="comments">按 Comments</option>
+      <option value="likes">按 Likes</option>
+      <option value="date">按 最新日期</option>
+    </select>
+    <button class="btn" id="fVideo"><svg class="ic"><use href="#i-video"/></svg>只看视频</button>
+
+    <a class="btn" href="team.html" target="_top" title="工作台"><svg class="ic"><use href="#i-users"/></svg>工作台</a>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="chips" id="presets"></div>
+  <div class="chips" id="trends"></div>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none"><svg class="ic"><use href="#i-search"/></svg>没有符合条件的帖子</div>
+  <div class="more" id="moreWrap" style="display:none"><button id="moreBtn">载入更多</button></div>
+</main>
+<footer>数据来源 Supabase · 每周自动更新 · 状态更改即时同步全团队 · 视频由 Instagram 官方 embed 播放</footer>
+<div id="toast"></div>
+<script id="data" type="application/json">[{"id": "DelsEuIo22D", "tracker": "Ming Yi Tang 竞对", "competitor": "djoeyyap", "caption": "There are people who knew you before anyone knew your name.\n\nThe ladies around this table are those people for me.\n\nGeorgeanne was at my first workshop in Cork, Ireland, in 1999. Eight people showed up. I was sweating, shaking, and trying very hard to look like someone who knew how to teach.\n\nI met Jayne in 2000, wearing a red biker jacket in Canary Wharf. That same year, I met Anna at a class in Schloss Bensberg, Germany, Helene Weber in Paris, Sherry Merchant in Crete, Greece, and Di Grobbler in the Drakensberg, South Africa.\n\nThey were among my first students. They were there before “Joey Yap” became Joey Yap. Today, each of them is a successful practitioner in her own right.\n\nMy brother Eddy was at the table too, hearing some of these stories for the first time. I think he enjoyed discovering just how nervous his brother was at the beginning. The ladies certainly enjoyed telling him.\n\nTwenty-seven years later, we’re still learning, still sharing stories, and somehow still finding o", "transcript": "", "brk": "Hook类型: 身份共鸣\n结构: 讲早期狼狈往事 → 引出老友重聚 → 给出新手鼓励\n为什么火: 真诚复盘底层初心，大咖的反差感与长情陪伴引发强烈的温情共鸣。\n改编角度: 讲述你当年研究手机号码学时的默默无闻与首批客户逆袭的故事。", "my": "💥 手机号码里有729吗？\n\n很多人以为，看财运就要天天看盘，或者到处问人哪里能发财。\n\n其实不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。\n第一个，看你的尾数组合。\n看它是不是属于责任感强、执行力不错的类型。\n真正分析仍需结合整组号码。\n花S$49就能做一次完整手机号码结构分析。\n看清楚自己的财运和人际关系。\n\n第二个，来参加手机号码课程。\n学习手机号码数字组合、数字结构及基础分析方法。\n课程费用是S$688。\n让数字成为你的铁饭碗小金库。\n小白也欢迎参加。\n\n第三个，来了解免费培训活动。\n在Bugis MRT附近有免费数字培训。\n课程免费，场地免费。\n现场跟大家一起拆解更多真实案例。\n\n以前常常觉得赚钱很辛苦，不知道问题出在哪里。\n卡在每天盲目努力，却总是存不到钱。\n用对方法以后，学会看懂自己的手机号码。\n终于找到方向，把数字变成自己的小金库。\n\n📲 WhatsApp：8821 3726\n想了解整组手机号码，欢迎随时找我。", "tags": "", "bait": false, "type": "Image", "likes": 498, "comments": 25, "er": 0.73, "followers": 71232, "date": "2026-10-17", "url": "https://www.instagram.com/p/DelsEuIo22D/", "video": false, "ratio": 0, "score": 0.8, "status": "未处理", "x": 1.2}, {"id": "DeMpFjekygX", "tracker": "Ming Yi Tang 竞对", "competitor": "djoeyyap", "caption": "I came across this write-up and found it very interesting.\n\nA lot of people are afraid of the unseen. Ghosts and all of that. What they should really understand is that these so-called spirits are not the ones causing you harm.\n\nThe greater harm comes from the evil inside a human heart. People smile at you, then hurt your feelings, cheat you, take what is yours. That is where the real damage happens.\n\nThis is why I always say, study BaZi and QiMen. Not to see spirits. To see people. Understand who is in front of you, and you can defend yourself from the harm that actually comes.\n\n鬼不傷人，人心傷人。\n\nHow well can you really read the people around you ? Share your thoughts here below.", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 引出恐惧谬误 → 揭示人性真相 → 给出玄学解法\n为什么火: 借鬼神话题反转切入人性防备痛点，引发强烈共鸣\n改编角度: 结合手机号测吉凶，强调通过尾数看清小人与虚伪面具", "my": "为什么每天这么努力赚钱，卡里还是存不到钱？\n\n很多人以为，是自己能力不够或者运气太差。\n\n其实不是，真正的问题，是你的结构没走对。\n\n2个数字看现状，一组号码看方向。\n第一个方法，看你的手机号码尾数。\n根据长期个案观察，整组号码的结构，直接影响你的日常开销和留财能力。\n花S$49做一次完整手机号码分析，就能把号码里的数字组合看清楚。\n\n第二个方法，看你的数字能量组合。\n不是不努力，是结构没走对。\n通过传统的易数解读，找出号码里容易漏财破财的地方。\n把这些数字结构理清楚，让数字成为你的铁饭碗小金库。\n\n第三个方法，来参加我们的手机号码课程。\n手机号码课程｜S$688，小白也欢迎参加。\n跟着系统的方法学习整组号码的结构和基础分析方法。\n学会之后，自己就能看懂身边的数字和方向。\n\n以前觉得赚多少花多少是命，遇到什么人都不懂怎么防。\n用了数字结构的方法以后，才发现号码里的规律能帮你避开很多弯路。\n\n想了解整组手机号码，\n欢迎联系我。\n📲 WhatsApp：8821 3726", "tags": "", "bait": false, "type": "Carousel", "likes": 504, "comments": 18, "er": 0.73, "followers": 71232, "date": "2026-10-07", "url": "https://www.instagram.com/p/DeMpFjekygX/", "video": false, "ratio": 0, "score": 0.78, "status": "未处理", "x": 1.1}, {"id": "Ddf1ERIIQux", "tracker": "Ming Yi Tang 竞对", "competitor": "djoeyyap", "caption": "China Excursion. Done.\nBaZi FULL Circle. Done.\n\nGo home?\n\nNope. :)\n\nStraight to the US of A.\n\nI’ll admit, I’m tired. Very tired. The kind of tired where you wake up and need a few seconds to remember which country you’re in.\n\nBut no rest yet. Still got shit to get done.\n\nFirst time on Korean Air’s First Class, and once again, very grateful for good seats.\n\nI used to think First Class was a luxury.\n\nThese days, at 49, after this much travelling, it feels more like medical assistance. :))\n\nGive me a flat bed, a blanket and several hours where nobody asks me anything.\n\nThat’s happiness.\n\nAnyways …. Good night. See you soon LA.", "transcript": "", "brk": "Hook类型: 身份共鸣\n结构: 亮明连轴转行程 → 金句自嘲(头等舱变医疗舱) → 结尾道晚安\n为什么火: 真实高压差旅状态配合幽默自嘲，拉近与高净值粉丝的距离\n改编角度: 结合手机号能量，讲述高能量号主如何靠数字磁场支撑全球高强度连轴转", "my": "每天转机坐到，记不清自己在哪个国家。\n\n你是不是也觉得自己很努力？\n每天早出晚归，加班到深夜。\n却还是存不到钱？\n\n不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。\n来看看生活里的几个调整方向。\n\n第一，先看看你的手机号码。\n很多人问，为什么我这么努力赚钱，还是存不到钱？\n其实是因为你的手机号码里，有漏财、破财的数字组合。\n花S$49做一次完整手机号码分析。\n从易数文化角度，看看你的数字和财富、事业的关联。\n\n第二，来参加手机号码课程。\n每个月总有人问我，怎么看懂整组号码？\n来上手机号码课程｜S$688。\n学习手机号码数字组合、数字结构及基础分析方法。\n让数字成为你的铁饭碗小金库。\n\n第三，小白也欢迎参加线下免费培训。\n不知道怎么开始？\n来Bugis MRT附近的线下免费培训。\n课程免费，场地免费。\n现场跟大家一起拆解真实案例，顺便看看你的手机号码。\n\n以前你可能觉得，赚钱只能靠死工资。\n不懂数字结构，换了几个号码还是老样子。\n用对方法以后，看懂自己的手机号码组合。\n让数字成为你的铁饭碗小金库。\n\n想了解整组手机号码，\n欢迎 WhatsApp：8821 3726。\n我把资料传给你。你看看哪一天、哪一段时间比较适合，可以回复告诉我。OK吗？", "tags": "", "bait": false, "type": "Image", "likes": 364, "comments": 16, "er": 0.53, "followers": 71232, "date": "2026-09-20", "url": "https://www.instagram.com/p/Ddf1ERIIQux/", "video": false, "ratio": 0, "score": 0.58, "status": "未处理", "x": 0.9}, {"id": "DeUeRMnKiiM", "tracker": "Ming Yi Tang 竞对", "competitor": "djoeyyap", "caption": "So much to do, so little time. Barely two weeks back in KL and I’m flying again. \n\nIt’s been a crazy fortnight of back-to-back events, meetings and preparing for my new QiMen training. I’m pretty sure I unpacked. Can’t remember when though. \n\nNext stop: the UK. Always enjoy being there. \n\nThe flight will be my office for the next few hours, preparing for the new QiMen launch right after my UK trip.\n\nApparently, the only way to get uninterrupted work done is to take a long flight:-)", "transcript": "", "brk": "Hook类型: 身份共鸣\n结构: 忙碌现状抱怨 → 透露出差行程 → 引出高效工作的幽默反思\n为什么火: 展现意见领袖的高压忙碌日常与松弛感幽默，引发高阶搞钱人群共鸣\n改编角度: 吐槽当代人电话永远打不完，引出手机尾号如何决定你的奔波劳碌命", "my": "✨ 忙了一整天，怎么还是存不到钱？\n很多人以为，赚钱靠的是拼命加班，或者换一份更高薪水的工作。\n其实不是不努力，是结构没走对。\n2个数字看现状，一组号码看方向。\n今天带你看看，怎么通过手机号码调整状态。\n第一步，先看整组号码的数字结构。\n根据长期个案观察，手机号码里藏着你的财富磁场。\n你可以看看自己的号码，是不是常有漏财的组合。\n花S$49就能做一次完整手机号码结构分析。\n第二步，了解数字背后的逻辑。\n数字能量不是玄学，是古人流传下来的智慧。\n让数字成为你的铁饭碗小金库。\n小白也完全可以从基础开始学起。\n第三步，系统学习手机号码课程。\n现在有手机号码课程｜S$688。\n学习手机号码数字组合、数字结构及基础分析方法。\n以前总觉得赚钱很难，每天为了生活到处奔波。\n用了正确的方法以后，才发现数字可以帮你找到方向。\n你的号码里有729吗？\n想了解整组手机号码，欢迎随时联系我。\n📲 WhatsApp：8821 3726", "tags": "", "bait": false, "type": "Image", "likes": 326, "comments": 9, "er": 0.47, "followers": 71232, "date": "2026-10-10", "url": "https://www.instagram.com/p/DeUeRMnKiiM/", "video": false, "ratio": 0, "score": 0.5, "status": "未处理", "x": 0.7}, {"id": "DfUDQIjCZoj", "tracker": "Ming Yi Tang 竞对", "competitor": "drwealtheducates", "caption": "Would you buy Sheng Siong at S$2.36?\n\nIt hit S$3.46 in July. Profits are still growing. The market doesn’t care.\n\nSwipe for 3 reasons to buy and 3 to sell, then argue it out with us on Telegram. Link in bio 👉 t.me/realDrWealth\n\n#ShengSiong #SGX #SGStocks #DrWealth", "transcript": "", "brk": "Hook类型: 反常识\n结构: 抛出低价买入反问 → 点出基本面矛盾 → 引导左滑与私域互动\n为什么火: 用具体知名股票和亏损错觉制造认知冲突，激发好奇心\n改编角度: 结合手机尾号凶吉与财运，抛出反常识断语吸引车主或老板左滑查看", "my": "✨ 你的手机号码里，有漏财的组合吗？\n\n很多人以为，赚不到钱是因为不够努力，或者大环境不好。\n其实不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。\n真正分析，还是需要结合整组号码来对照。\n这里有3个方法，帮你重新看懂自己的数字结构。\n\n第一，先看你的手机号码尾数。\n看看整体的数字组合，是属于什么倾向。\n从传统易数角度，了解数字的象征意义。\n花 S$49 做完整手机号码结构分析，把细节看清楚。\n\n第二，了解基础的数字组合。\n学习怎么看整组号码的结构。\n看看是不是经常遇到存不到钱的情况。\n报名手机号码课程，学费是 S$513 吗？不对，手机号码课程是 S$688。\n\n第三，直接来现场看看。\n参加线下的免费培训活动。\n课程免费，场地免费，就在 Bugis MRT 附近。\n顺便看看你的手机号码，跟大家一起交流。\n\n以前每天辛苦工作，钱还是存不住，不知道问题出在哪里。\n现在看懂了数字结构，方向清楚了，心里也踏实多了。\n\n📲 WhatsApp：8821 3726\n想了解整组手机号码，欢迎直接发信息来问我。OK吗？", "tags": "ShengSiong, SGX, SGStocks, DrWealth", "bait": false, "type": "Carousel", "likes": 45, "comments": 0, "er": 0.35, "followers": 13011, "date": "2026-11-04", "url": "https://www.instagram.com/p/DfUDQIjCZoj/", "video": false, "ratio": 0, "score": 0.35, "status": "未处理", "x": 1.6}, {"id": "DeRBUWHGlbe", "tracker": "Ming Yi Tang 竞对", "competitor": "drwealtheducates", "caption": "Singapore's three banks fell up to 9% in a single week. The question now is simple. Is this a discount or the start of something bigger?\n\nThe bear case is real. Citi turned cautious on valuation upside after a long rally pushed price to book multiples well above historical averages. \n\nThe bull case is also real. DBS, OCBC and UOB still have strong capital ratios, conservative underwriting and deep liquidity buffers. \n\nWe call it a healthy reality check, not a structural crisis.\n\nThe catch. The easy margin driven gains are likely done. The next leg depends on how each balance sheet handles rising credit costs.\n\nhttps://drwealth.com/dbs-ocbc-and-uob-fell-up-to-9-this-week-what-happened-more-to-fall/\n\n#SingaporeStocks #DBS #OCBC #UOB #Dividends", "transcript": "", "brk": "Hook类型: 痛点直击\n结构: 抛出暴跌现象 → 多空对比分析 → 给出总结与行动建议\n为什么火: 紧跟本地热点新闻，客观剖析利空利好，为迷茫投资者提供清晰决策框架\n改编角度: 盘点近期运势低迷的生肖或号码组合，分析是短暂回调还是转运前兆，给出化解建议", "my": "729代表什么？\n\n很多人以为，每天辛辛苦苦加班，手里存不到钱，是因为工作不够努力。\n\n不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。\n真正看懂手机号码里的数字结构，你会发现，有些组合会让你存不到钱，有些组合会帮你聚财。\n第一步，先看你的手机号码尾数。\n看看整组号码里有没有漏财的数字组合。\n花S$49做一次完整手机号码分析，就能看清楚。\n\n以前每个月发薪水就见底，钱不知道花在哪里。\n用易数的方法看懂自己的手机号码结构以后，才知道问题出在哪里，开始懂得怎么留住钱。\n\n想了解整组手机号码，\n欢迎 WhatsApp：8821 3726。\n数字揭秘、风水、祝由秘术、你上那一门呢？请留言。\n📲 WhatsApp：8821 3726", "tags": "SingaporeStocks, DBS, OCBC, UOB, Dividends", "bait": false, "type": "Carousel", "likes": 30, "comments": 0, "er": 0.23, "followers": 13011, "date": "2026-10-09", "url": "https://www.instagram.com/p/DeRBUWHGlbe/", "video": false, "ratio": 0, "score": 0.23, "status": "未处理", "x": 1.0}, {"id": "DeO_vQzGQmn", "tracker": "Ming Yi Tang 竞对", "competitor": "drwealtheducates", "caption": "I asked AI if DBS is a buy. It said no.\n\nSo I asked again, and this time it said yes.\n\nSame AI, same stock, same week. Two confident answers that couldn’t both be right.\n\nThe AI wasn’t broken. It was doing exactly what I asked it to do, and that’s the problem most investors don’t see.\n\nOn Sat, 24 Oct, Alvin Chow will show you how to make AI challenge your thinking instead of agreeing with it.\n\n📍 143 Cecil St, GB Building\n🕙 10am to 12pm\n🪑 Limited seats\n\nhttps://luma.com/drwealth-inperson\n\n#DrWealth #AIInvesting #DBS #InvestingSG #SGInvestors", "transcript": "", "brk": "Hook类型: 反常识\n结构: 矛盾现象引出 → 揭示问题本质 → 线下活动转化\n为什么火: 利用AI给出截然相反答案的反常识现象，精准击中投资者对AI盲目信任的痛点，引发好奇与思考。\n改编角度: 探讨手机尾号如何对人生产生截然不同的影响，引导观众注意数字能量中的盲点并报名咨询。", "my": "💥 为什么这么努力赚钱，还是存不到钱？\n\n很多人以为，只要拼命加班、省吃俭用，或者盲目跟着别人投资，财务状况自然就会变好。\n\n其实不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。第一个方法，先看看你的手机号码尾数。根据长期个案观察，不同的数字组合带有不同的磁场能量，往往能反映出你目前的开销习惯和赚钱状态。真正分析仍需结合整组号码，小白也欢迎参加。\n\n第二个方法，来了解手机号码数字组合的排列结构。很多人不知道，号码里的数字相克或者排列不对，容易留不住财富。通过系统的数字揭秘，你可以清楚了解整组手机号码的磁场，让数字成为你的铁饭碗小金库。\n\n第三个方法，报名我们的手机号码课程。手机号码课程｜S$688，由我带你一步步拆解数字结构。从基础的易数解读开始学起，掌握如何看懂整组号码，不用花冤枉钱，自己也能为自己和家人看号码。\n\n以前大家遇到财运不顺或者存不到钱的时候，只能自己闷头苦想，不知道问题出在哪里。\n\n现在懂了数字结构之后，看问题一目了然，找对方向再去调整。\n\n想了解整组手机号码，欢迎 WhatsApp：8821 3726。\n\n数字揭秘、风水、祝由秘术、你上那一门呢？请留言", "tags": "DrWealth, AIInvesting, DBS, InvestingSG, SGInvestors", "bait": false, "type": "Carousel", "likes": 27, "comments": 0, "er": 0.21, "followers": 13011, "date": "2026-10-08", "url": "https://www.instagram.com/p/DeO_vQzGQmn/", "video": false, "ratio": 0, "score": 0.21, "status": "未处理", "x": 1.0}, {"id": "DfjV7eVGcz3", "tracker": "Ming Yi Tang 竞对", "competitor": "drwealtheducates", "caption": "UOB's Q3 profit jumped 182%. Its shares fell 5% on results day.\n\nThat is not the market being irrational. It is the market reading past the headline.\n\nUOB's jump came mostly from credit provisions falling 81%, from $1.36 billion to $258 million. Net interest income grew just 1%. It still missed the $1.38 billion analysts expected.\n\nDBS is the mirror image. Profit fell 5% to $2.81 billion. But the damage came from trading income, which plunged 65% and makes up only about 6% of total income. Net interest income rose 4%, and management says it has passed its trough.\n\nOCBC was the only beat. $2.04 billion against roughly $2.01 billion expected, with banking operations profit at a record $1.9 billion.\n\nThe real story: the easy earnings from wide margins are fading. Loans, wealth and fees now carry the load. At elevated valuations, even small misses get punished.\n\nFull breakdown in bio/comments. \n\n#SingaporeBanks #DBS #UOB #OCBC #SGX", "transcript": "", "brk": "Hook类型: 反常识\n结构: 现象反差 → 数据拆解 → 核心结论\n为什么火: 用大行财报暴涨却股价大跌的反常识现象，击中投资者认知盲区\n改编角度: 揭秘看似吉祥的手机尾号为何暗藏漏财危机，用反直觉数据制造吸睛点", "my": "💥 月薪上班族，竟拿10万新元投资？\n\n你是不是以为，赚钱一定要懂看财报，一定要天天盯盘研究大盘走势。\n\n其实不是，不是不努力，是结构没走对。\n\n2个数字看现状，一组号码看方向。\n\n手机号码的数字组合，往往藏着你对财富和理财的选择习惯。\n\n第一点，看你的号码里有没有容易留不住钱的数字结构。\n\n根据长期个案观察，很多存不到钱的人，号码组合里常常带有容易大进大出的能量。\n\n通过传统易数解读，把这些结构调整顺，让数字成为你的铁饭碗小金库。\n\n第二点，看你的号码组合是不是属于执行力强、责任感不错的类型。\n\n像常见的一些数字组合，常见于执行力不错的人。\n\n真正分析仍需结合整组号码，帮你找到适合自己的事业和财富方向。\n\n第三点，了解手机号码里的数字秘密，不需要自己盲目摸索。\n\n来参加手机号码课程，只要S$688，系统学习整组号码的结构和分析方法。\n\n小白也欢迎参加，帮你从底层逻辑看懂号码。\n\n以前你可能觉得赚钱很难，每天很努力却存不到钱，不知道问题出在哪里。\n\n看懂数字结构以后，你开始明白自己的财务盲点，知道方向在哪里。\n\n想了解整组手机号码，或者对手机号码课程感兴趣，欢迎联络我。\n\n📲 WhatsApp：8821 3726\n\n数字揭秘、风水、祝由秘术，你上那一门呢？请留言", "tags": "SingaporeBanks, DBS, UOB, OCBC, SGX", "bait": false, "type": "Carousel", "likes": 21, "comments": 1, "er": 0.17, "followers": 13011, "date": "2026-11-10", "url": "https://www.instagram.com/p/DfjV7eVGcz3/", "video": false, "ratio": 0, "score": 0.18, "status": "未处理", "x": 0.8}]</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const SUPA = 'https://bfyuobgakoqhdmfcpaxm.supabase.co';
+const ANON = 'sb_publishable_gWexvojZHKcPlQN7CzsJgw_9y1gF17M';
+const STATUSES = ["未处理", "拍摄中", "已处理", "跳过"];
+document.getElementById('updated').textContent = '更新于 2026-11-13 11:40 (GMT+8)';
+const PAGE = 48;
+let shown = PAGE;
+let videoOnly = false;
+let curTab = '全部';
+
+const $ = id => document.getElementById(id);
+const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+const getKey = () => ANON;  // anon key is baked in — safe, can only change status
+const I = n => '<svg class="ic"><use href="#i-' + n + '"/></svg>';
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const byRec = {}; DATA.forEach(d => byRec[d.id] = d);
+const TRENDS = [];
+DATA.forEach(d => {
+  d.days = d.date ? Math.max(0, Math.floor((Date.now() - new Date(d.date + 'T00:00:00')) / 864e5)) : null;
+  d.horse = d.followers > 0 && d.followers < 50000 && ((d.x || 0) >= 2 || d.score >= 10);
+});
+const PRESETS = [
+  { k: 'px', icon: 'trend', label: '真爆款 ×2+', f: d => (d.x || 0) >= 2 },
+  { k: 'pn', icon: 'star', label: '近7天', f: d => d.days !== null && d.days <= 7 },
+  { k: 'ph', icon: 'zap', label: '黑马', f: d => d.horse },
+  { k: 'pb', icon: 'magnet', label: '引流帖', f: d => d.bait },
+];
+const presetOn = {};
+
+function toast(msg, ok) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  t.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// filters
+const comps = [...new Set(DATA.map(d => d.competitor))].sort();
+comps.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = '@'+c; $('fComp').appendChild(o); });
+[...new Set(DATA.map(d => d.tracker))].forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t; $('fTracker').appendChild(o); });
+
+function matchQ(d) {
+  const q = ($('fSearch').value || '').trim().toLowerCase();
+  return !q || (d.caption + ' ' + (d.tags || '') + ' ' + (d.transcript || '') + ' ' + (d.brk || '') + ' ' + d.competitor).toLowerCase().includes(q);
+}
+
+function basePool() {
+  const t = $('fTracker').value, c = $('fComp').value;
+  return DATA.filter(d => (!t || d.tracker === t) && (!c || d.competitor === c) && (!videoOnly || d.video)
+    && matchQ(d) && PRESETS.every(p => !presetOn[p.k] || p.f(d)));
+}
+
+function filtered() {
+  const s = $('fSort').value;
+  let arr = basePool().filter(d => curTab === '全部' || d.status === curTab);
+  const key = { score:'score', er:'er', comments:'comments', likes:'likes', x:'x' }[s];
+  if (s === 'date') arr.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  else arr.sort((a,b) => (b[key]||0) - (a[key]||0));
+  return arr;
+}
+
+let dragRec = null;
+
+function renderTabs() {
+  const pool = basePool();
+  const counts = { '全部': pool.length };
+  STATUSES.forEach(s => counts[s] = pool.filter(d => d.status === s).length);
+  $('tabs').innerHTML = '';
+  ['全部', ...STATUSES].forEach(name => {
+    const el = document.createElement('div');
+    el.className = 'tab' + (curTab === name ? ' on' : '') + (name !== '全部' ? ' droppable' : '');
+    el.innerHTML = esc(name) + ' <span class="cnt">' + counts[name] + '</span>';
+    el.onclick = () => { curTab = name; shown = PAGE; render(); };
+    if (name !== '全部') {
+      el.ondragover = e => { if (dragRec) { e.preventDefault(); el.classList.add('over'); } };
+      el.ondragleave = () => el.classList.remove('over');
+      el.ondrop = e => {
+        e.preventDefault(); el.classList.remove('over');
+        const d = byRec[dragRec]; dragRec = null;
+        if (d && d.status !== name) setStatus(d, name);
+      };
+    }
+    $('tabs').appendChild(el);
+  });
+}
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target, pid = el.dataset.pid;
+      if (!el.querySelector('iframe')) {
+        const f = document.createElement('iframe');
+        f.src = 'https://www.instagram.com/p/' + pid + '/embed/';
+        f.loading = 'lazy'; f.allow = 'autoplay; encrypted-media';
+        el.appendChild(f);
+      }
+      io.unobserve(el);
+    }
+  });
+}, { rootMargin: '400px' });
+
+async function setStatus(d, val) {
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?post_id=eq.' + encodeURIComponent(d.id), {
+      method: 'PATCH',
+      headers: { 'apikey': ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ status: val })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d.status = val;
+    cacheStatus(d.id, val);
+    toast('✓ @' + d.competitor + ' 已移到「' + val + '」', true);
+  } catch (e) {
+    toast('更新失败: ' + e.message + (String(e.message).includes('401') || String(e.message).includes('403') ? ' — 密钥无效?' : ''), false);
+  }
+  render();
+}
+
+function card(d, idx) {
+  const el = document.createElement('div');
+  el.className = 'card' + ((d.x || 0) >= 2 ? ' outlier' : '');
+  el.style.animationDelay = Math.min(idx % PAGE, 14) * 30 + 'ms';
+  el.draggable = true;
+  el.ondragstart = e => {
+    dragRec = d.id;
+    e.dataTransfer.effectAllowed = 'move';
+    el.classList.add('lifting');
+    document.body.classList.add('dragging');
+  };
+  el.ondragend = () => {
+    el.classList.remove('lifting');
+    document.body.classList.remove('dragging');
+    dragRec = null;
+  };
+  const typeIcon = d.video ? 'video' : (d.type === 'Carousel' ? 'layers' : 'image');
+  const days = d.days, horse = d.horse;
+  const ago = days === null ? '' : (days === 0 ? '今天' : days + '天前');
+  const lines = (d.caption || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const hook = lines[0] || '';
+  const tr = (d.transcript && d.transcript !== '(转录失败)' && d.transcript !== '(无口播内容)') ? d.transcript : '';
+  el.innerHTML = `
+    <div class="embed" data-pid="${d.id}"><div class="ph"><svg class="ic"><use href="#i-${typeIcon}"/></svg></div></div>
+    <div class="meta">
+      <div class="row1">
+        <span class="handle" title="拖到上方 tab 即可归类">${I('grip')}</span>
+        <a class="who" href="https://www.instagram.com/${d.competitor}/" target="_blank">@${d.competitor}</a>
+        <span class="badge">${d.type || '-'}</span>
+        ${days !== null && days <= 7 ? '<span class="badge bnew">' + I('star') + '新帖</span>' : ''}
+        ${horse ? '<span class="badge bhorse">' + I('zap') + '黑马</span>' : ''}
+        ${d.bait ? '<span class="badge bbait" title="「留言XX」引流打法 — 评论被引流放大,漏斗设计值得学">' + I('magnet') + '引流</span>' : ''}
+        <span class="date" title="${d.date || ''}">${ago}</span>
+      </div>
+      <div class="nums">
+        <span class="num hot" title="Viral Score">${I('flame')}<b>${d.score}</b></span>
+        ${(d.x || 0) >= 2 ? '<span class="num x" title="是自家平均热度的多少倍">' + I('trend') + '<b>×' + d.x + '</b></span>' : ''}
+        <span class="num er" title="Engagement Rate">${I('pct')}<b>${d.er}%</b></span>
+        <span class="num" title="Likes">${I('heart')}<b>${d.likes > 0 ? fmt(d.likes) : '隐藏'}</b></span>
+        <span class="num" title="Comments">${I('msg')}<b>${fmt(d.comments)}</b></span>
+        <span class="num" title="Followers">${I('users')}<b>${fmt(d.followers)}</b></span>
+      </div>
+      <div class="cap" onclick="this.classList.toggle('open')"></div>
+      ${d.brk ? '<div class="ai" onclick="this.classList.toggle(&quot;open&quot;)"></div>' : ''}
+      ${d.my ? '<div class="mine" onclick="this.classList.toggle(&quot;open&quot;)"></div>' : ''}
+      <div class="srow"><label>状态</label><select class="status btn s${d.status}"></select>
+        <button class="abtn copy" title="复制完整文案">${I('copy')}文案</button>
+        ${tr ? '<button class="abtn mic" title="复制视频口播逐字稿">' + I('mic') + '口播</button>' : ''}
+        ${d.my ? '<button class="abtn minec" title="复制我的改写口播稿(可直接拍)">' + I('mic') + '我的稿</button>' : ''}
+        <button class="abtn brief" title="复制拍摄 Brief(数据+Hook+AI拆解+我的稿+口播稿+文案)">${I('clip')}Brief</button>
+        <a class="abtn" href="${d.url}" target="_blank" title="打开 Instagram 原帖">${I('ext')}</a></div>
+    </div>`;
+  const capEl = el.querySelector('.cap');
+  const restTxt = lines.slice(1).join('\n');
+  capEl.innerHTML = hook ? '<b>' + esc(hook) + '</b>' + (restTxt ? '<br>' + esc(restTxt).replace(/\n/g, '<br>') : '') : '';
+  const aiEl = el.querySelector('.ai');
+  if (aiEl) aiEl.innerHTML = '<b>💡 AI 拆解</b><br>' + esc(d.brk).split(String.fromCharCode(10)).join('<br>');
+  const myEl = el.querySelector('.mine');
+  if (myEl) myEl.innerHTML = '<b>🎬 我的版本(可直接拍)</b><br>' + esc(d.my).split(String.fromCharCode(10)).join('<br>');
+  const sel = el.querySelector('.status');
+  STATUSES.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sel.appendChild(o); });
+  sel.value = d.status;
+  sel.onchange = () => setStatus(d, sel.value);
+  el.querySelector('.copy').onclick = () =>
+    navigator.clipboard.writeText(d.caption || '').then(() => toast('✓ 文案已复制', true));
+  const micBtn = el.querySelector('.mic');
+  if (micBtn) micBtn.onclick = () =>
+    navigator.clipboard.writeText(tr).then(() => toast('✓ 口播稿已复制', true));
+  const mineBtn = el.querySelector('.minec');
+  if (mineBtn) mineBtn.onclick = () =>
+    navigator.clipboard.writeText(d.my).then(() => toast('✓ 我的改写稿已复制', true));
+  el.querySelector('.brief').onclick = () => {
+    const NL = String.fromCharCode(10);
+    const parts = ['🎬 爆款参考 @' + d.competitor + ((d.x || 0) >= 2 ? '(自家平均 ×' + d.x + ')' : ''),
+      '📊 🔥' + d.score + ' | ER ' + d.er + '% | ❤️ ' + (d.likes > 0 ? fmt(d.likes) : '隐藏') +
+      ' | 💬 ' + fmt(d.comments) + ' | 👥 ' + fmt(d.followers) + (ago ? ' | ' + ago : ''),
+      '🔗 ' + d.url, '✍️ Hook: ' + hook];
+    if (d.brk) parts.push('——— AI 拆解 ———', d.brk);
+    if (d.my) parts.push('——— 我的版本(可直接拍)———', d.my);
+    if (tr) parts.push('——— 竞对原口播稿 ———', tr);
+    parts.push('——— 完整文案 ———', d.caption || '');
+    navigator.clipboard.writeText(parts.join(NL)).then(() => toast('✓ Brief 已复制,可直接发给拍摄/剪辑', true));
+  };
+  io.observe(el.querySelector('.embed'));
+  return el;
+}
+
+function render() {
+  renderTabs();
+  const arr = filtered();
+  const grid = $('grid'); grid.innerHTML = '';
+  arr.slice(0, shown).forEach((d, i) => grid.appendChild(card(d, i)));
+  $('empty').style.display = arr.length ? 'none' : '';
+  $('moreWrap').style.display = arr.length > shown ? '' : 'none';
+}
+
+
+function applyStatusCache() {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    Object.keys(c).forEach(rid => { const d = byRec[rid]; if (d) d.status = c[rid]; });
+  } catch (e) {}
+}
+
+function cacheStatus(rid, val) {
+  try {
+    const c = JSON.parse(localStorage.getItem('st_cache') || '{}');
+    c[rid] = val; localStorage.setItem('st_cache', JSON.stringify(c));
+  } catch (e) {}
+}
+
+// live status refresh (so weekly-baked page shows current statuses)
+async function refreshStatuses() {
+  applyStatusCache(); render();  // last-known statuses first
+  if (Date.now() - (+localStorage.getItem('st_ts') || 0) < 600000) return;  // 10-min throttle
+  localStorage.setItem('st_ts', String(Date.now()));
+  const fresh = {};
+  try {
+    const r = await fetch(SUPA + '/rest/v1/posts?select=post_id,status', { headers: { 'apikey': ANON } });
+    if (!r.ok) return;
+    (await r.json()).forEach(row => {
+      const d = byRec[row.post_id];
+      if (d) d.status = row.status || '未处理';
+      if (row.status && row.status !== '未处理') fresh[row.post_id] = row.status;
+    });
+    localStorage.setItem('st_cache', JSON.stringify(fresh));
+    render();
+  } catch (e) {}
+}
+
+['fTracker','fComp','fSort'].forEach(id => $(id).onchange = () => { shown = PAGE; render(); });
+$('fSearch').oninput = () => { shown = PAGE; render(); };
+$('fVideo').onclick = () => { videoOnly = !videoOnly; $('fVideo').classList.toggle('on', videoOnly); shown = PAGE; render(); };
+$('moreBtn').onclick = () => { shown += PAGE; render(); };
+
+// preset quick filters
+$('presets').innerHTML = '<span class="lbl">快筛</span>';
+PRESETS.forEach(p => {
+  const c = document.createElement('span'); c.className = 'chip2';
+  c.innerHTML = I(p.icon) + esc(p.label);
+  c.onclick = () => { presetOn[p.k] = !presetOn[p.k]; c.classList.toggle('on', presetOn[p.k]); shown = PAGE; render(); };
+  $('presets').appendChild(c);
+});
+
+// trending hashtags among outlier posts
+if (TRENDS.length) {
+  $('trends').innerHTML = '<span class="lbl">爆款热词</span>';
+  TRENDS.forEach(([tag, n]) => {
+    const c = document.createElement('span'); c.className = 'chip2';
+    c.textContent = '#' + tag + ' ' + n;
+    c.onclick = () => { $('fSearch').value = $('fSearch').value === tag ? '' : tag; shown = PAGE; render(); };
+    $('trends').appendChild(c);
+  });
+} else { $('trends').style.display = 'none'; }
+
+render();
+refreshStatuses();
+</script>
+</body>
+</html>
